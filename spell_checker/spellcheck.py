@@ -1,6 +1,6 @@
 import re
 
-from flask import Blueprint
+from flask import abort, Blueprint
 
 from spell_checker.utils import build_regex, get_character_repeats, is_correct_format
 
@@ -8,8 +8,10 @@ from spell_checker.utils import build_regex, get_character_repeats, is_correct_f
 bp = Blueprint('spellcheck', __name__, url_prefix='/spellcheck')
 
 
-# Sample words
+# TODO: Delete sample words
 words = [
+    'car',
+    'care',
     'ballistae',
     'ballistic',
     'ballistically',
@@ -34,13 +36,7 @@ def check_word(query):
 
     # First, look for an exactly correct match as that is easy to identify
     if is_correct_format(query) and standardized_query in words:
-        return {
-            "status": 200,
-            "body": {
-                "correct": True,
-                "suggestions": []
-            }
-        }
+        return {"correct": True, "suggestions": []}, 200
 
     # If there is not an exact match, go through the process of looking for possible matches in the dictionary provided
     character_repeats = get_character_repeats(standardized_query)
@@ -49,8 +45,7 @@ def check_word(query):
 
     matches = [word for word in words if pattern.fullmatch(word)]
 
-    return {
-        "query": query,
-        "regex": regex,
-        "matches": matches
-    }
+    if matches:
+        return {"correct": False, "suggestions": matches}, 200
+    else:
+        abort(404)
