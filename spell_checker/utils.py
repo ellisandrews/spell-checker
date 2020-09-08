@@ -38,27 +38,22 @@ def get_letter_repeats(string):
     # Container to hold counts of consecutively repeated letters
     letter_repeats = []
 
-    # Initialize variables for iteration
-    letter = ''
-    repeats = 0
+    # Calculate this value only once
     string_length = len(string)
 
-    # TODO: Make the iteration below prettier?
+    # Initialize variables for iteration
+    letter = string[0]
+    repeats = 1
 
-    # Iterate over the string
-    for i in range(string_length):
-
-        # The first letter doesn't have a previous letter to compare against
-        if i == 0:
-            letter = string[i]
-            repeats = 1
-            continue            
+    # Iterate over the string, starting at the second letter given that first letter has no previous letter 
+    # to compare to, and was used instead to initialize our iteration variable
+    for i in range(1, string_length):
 
         # If the letter is the same as the previous, incremement the current repeats count
         if string[i] == string[i-1]:
             repeats += 1
         
-        # Otherwise, record the number of repeats for the letter and start a new streak
+        # Otherwise, record the number of repeats for the current letter and start a new streak
         else:
             letter_repeats.append((letter, repeats))
             letter = string[i]
@@ -75,6 +70,8 @@ def build_regex(letter_repeats):
     """
     Build a regex given a letter sequence with repeats.
     """
+    # TODO: Consider decoupling vowel omission check from repeated characters check? i.e. Don't build a single regex?
+
     # Regex fragment representing zero or more vowels
     any_vowels = '[aeiou]*'
 
@@ -83,10 +80,7 @@ def build_regex(letter_repeats):
 
     # Build the regex string, specifying max number of allowed repeats of each letter and any vowels in between
     for letter, repeats in letter_repeats:
-        regex += letter + '{' + f"1,{repeats}" + '}' + any_vowels
+        regex += letter + '{1,' + str(repeats) + '}' + any_vowels
 
     # Return the constructed regex string
     return regex
-
-
-print(build_regex(get_letter_repeats('bBallLLlnN')))
