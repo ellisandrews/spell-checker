@@ -1,72 +1,41 @@
-# TODO: Delete this function?
-def get_letter_sequence(string):
+def get_character_repeats(string):
     """
-    Determine the sequence of letters in a string (ignoring repeats).
+    Get the sequence of characters in a string with the number of times each is consecutively repeated.
     
-    e.g. 'aAaaBBBbbbccAAa' -> ['a', 'b', 'c', 'a']
+    e.g. 'aaabbcaa' -> [('a', 3), ('b', 2), ('c', 1), ('a', 2)]
     """
-    # Convert the string to lowercase
-    string = string.lower()
+    # Container to hold the counts of consecutively repeated characters in the string
+    character_repeats = []
 
-    # List to hold the sequence of letters
-    sequence = []
-
-    # Iterate over the string to find the sequence of letters
-    for i in range(len(string)):
-
-        # The first letter doesn't have a previous letter to compare against
-        if i == 0:
-            sequence.append(string[i])
-            continue
-
-        # If the current letter is different from the previous letter, append it to the sequence
-        if string[i] != string[i-1]:
-            sequence.append(string[i])
-    
-    return sequence
-
-
-def get_letter_repeats(string):
-    """
-    Determine the sequence of letters in a string with their consecutive repeat counts.
-    
-    e.g. 'aAaaBBBbbbccAAa' -> [('a', 4), ('b', 6), ('c', 2), ('a', 3)]
-    """
-    # Convert the string to lowercase
-    string = string.lower()
-
-    # Container to hold counts of consecutively repeated letters
-    letter_repeats = []
-
-    # Calculate this value only once
+    # Calculate length of the string once (used a couple times in iteration)
     string_length = len(string)
 
     # Initialize variables for iteration
-    letter = string[0]
+    character = string[0]
     repeats = 1
 
-    # Iterate over the string, starting at the second letter given that first letter has no previous letter 
-    # to compare to, and was used instead to initialize our iteration variable
+    # Iterate over the string, starting at the second character given that first has no previous character 
+    # with which to compare (and was instead used for initialization for the below algorithm)
     for i in range(1, string_length):
 
-        # If the letter is the same as the previous, incremement the current repeats count
+        # If the character is the same as the previous, incremement the current repeats count
         if string[i] == string[i-1]:
             repeats += 1
         
-        # Otherwise, record the number of repeats for the current letter and start a new streak
+        # Otherwise, record the final number of repeats for the current character and initialize a new streak
         else:
-            letter_repeats.append((letter, repeats))
-            letter = string[i]
+            character_repeats.append((character, repeats))
+            character = string[i]
             repeats = 1
     
-        # Account for the current streak if we've reached the last letter
+        # Account for the current streak if we've reached the last character
         if i == string_length - 1:
-            letter_repeats.append((letter, repeats))
+            character_repeats.append((character, repeats))
 
-    return letter_repeats
+    return character_repeats
 
 
-def build_regex(letter_repeats):
+def build_regex(character_repeats):
     """
     Build a regex given a letter sequence with repeats.
     """
@@ -78,9 +47,14 @@ def build_regex(letter_repeats):
     # Initialize regex string, allowing for optional vowels at the start
     regex = any_vowels
 
-    # Build the regex string, specifying max number of allowed repeats of each letter and any vowels in between
-    for letter, repeats in letter_repeats:
-        regex += letter + '{1,' + str(repeats) + '}' + any_vowels
+    # Build the regex string, specifying max number of allowed repeats of each character and any vowels in between
+    for character, repeats in character_repeats:
+        regex += character + '{1,' + str(repeats) + '}' + any_vowels
 
     # Return the constructed regex string
     return regex
+
+
+def is_correct_format(string):
+    """Check whether a string is of an allowable format. Currently just checking for correct capitalization."""
+    return string.islower() or string.isupper() or string.istitle()
