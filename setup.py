@@ -6,8 +6,10 @@ setup(
     version='1.0',
     description='Simple spell checking API',
     author='Ellis Andrews',
-    packages=['spell-checker'],
+    packages=['spell_checker'],
     install_requires=[
-        'Flask'
+        'Flask',
+        'flask-redis',
+        'redis'
     ]
 )
