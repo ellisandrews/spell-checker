@@ -1,13 +1,15 @@
 import re
+from typing import List, Tuple
 
 
-def build_regex(string):
+def build_regex(string: str) -> re.Pattern:
     """
-    Build a regex pattern to fit desired specifications for word matching.
+    Build a regex pattern to fit desired specifications for allowable word matching.
+    
+    Currently, the specifications for allowed matches (ignoring capitalization) are:
+    1) Superfluous repeated letters
+    2) Missing vowels
     """
-    # Digest the word into sequences of repeating characters
-    character_repeats = get_character_repeats(string)
-
     # Regex fragment representing zero or more vowels
     any_vowels = '[aeiou]*'
 
@@ -15,14 +17,14 @@ def build_regex(string):
     regex = any_vowels
 
     # Build the regex string, specifying max number of allowed repeats of each character and any vowels in between
-    for character, repeats in character_repeats:
+    for character, repeats in get_character_repeats(string):
         regex += character + '{1,' + str(repeats) + '}' + any_vowels
 
     # Return the compiled regex pattern
     return re.compile(regex)
 
 
-def get_character_repeats(string):
+def get_character_repeats(string: str) -> List[Tuple[str, int]]:
     """
     Get the sequence of characters in a string with the number of times each is consecutively repeated.
     
@@ -31,15 +33,19 @@ def get_character_repeats(string):
     # Container to hold the counts of consecutively repeated characters in the string
     character_repeats = []
 
-    # Calculate length of the string once (used a couple times during iteration)
+    # Calculate length of the string once (used a few times)
     string_length = len(string)
 
-    # Initialize variables for iteration
+    # Handle the edge case of an empty string
+    if string_length == 0:
+        return character_repeats
+
+    # Initialize variables for iteration, seeding with the first character of the string
     character = string[0]
     repeats = 1
 
     # Iterate over the string, starting at the second character given that first has no previous character 
-    # with which to compare (and was instead used for initialization for the below algorithm)
+    # to which to compare (and was instead used for initialization for the below algorithm)
     for i in range(1, string_length):
 
         # If the character is the same as the previous, incremement the current repeats count
@@ -59,6 +65,13 @@ def get_character_repeats(string):
     return character_repeats
 
 
-def is_correct_format(string):
-    """Check whether a string is of an allowable format. Currently just checking for correct capitalization."""
+def is_correct_format(string: str) -> bool:
+    """
+    Check whether a string is of an allowable format. 
+    
+    Currently, this is just checking that capitalization falls under one of three cases:
+    1) All lowercase
+    2) All upppercase
+    3) Title case (fist letter capitalized)
+    """
     return string.islower() or string.isupper() or string.istitle()

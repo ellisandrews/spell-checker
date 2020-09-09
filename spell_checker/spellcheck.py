@@ -9,11 +9,12 @@ bp = Blueprint('spellcheck', __name__, url_prefix='/spellcheck')
 
 @bp.route('/<query>')
 def check_word(query):
-
+    """Endpoint to check whether a word is spelled according to given standards."""
+    
     # Convert the query string to standard format for processing (all lowercase letters)
     word = query.lower()
 
-    # Pull the set of all dictionary words from redis
+    # Pull the set of all allowable dictionary words from redis
     dict_words = redis_client.smembers('spellcheck:dictionary')
 
     # First, look for an exactly correct match as that is easy to identify and immediately returnable

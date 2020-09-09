@@ -4,9 +4,9 @@ from pathlib import Path
 from redis import StrictRedis
 
 
-def populate(filepath, key, strict_redis):
+def populate(filepath: str, key: str, strict_redis: StrictRedis) -> None:
     """
-    Read in a file of words and add them to a redis set under a given key.
+    Read in a file of words (one per line) and add them to a redis set under a given key.
     
     Note: If the file of words to add is large, probably want to refactor to read/load in batches.
     """
@@ -14,8 +14,8 @@ def populate(filepath, key, strict_redis):
     with open(filepath, 'r') as f:
         lines = f.readlines()
 
-    # Strip newline character from each line
-    lines = [line.strip('\n') for line in lines]
+    # Strip newline character from each line and ensure all are lowercase
+    lines = [line.strip('\n').lower() for line in lines]
 
     # Add the words to the redis set under the specified key
     strict_redis.sadd(key, *lines)
