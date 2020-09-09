@@ -1,7 +1,7 @@
 from flask import abort, Blueprint
 
 from spell_checker import redis_client
-from spell_checker.utils import build_regex, get_character_repeats, is_correct_format
+from spell_checker.utils import build_regex, is_correct_format
 
 
 bp = Blueprint('spellcheck', __name__, url_prefix='/spellcheck')
