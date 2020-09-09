@@ -1,5 +1,4 @@
-class ProductionConfig:
-    REDIS_URL = "redis://localhost:6379/0"
+# NOTE: More configs could be added here (e.g. ProductionConfig, DevelopmentConfig, etc.)
 
-class DevelopmentConfig:
-    REDIS_URL = "redis://localhost:6379/0"
+class Config:
+    REDIS_URL = 'redis://redis_db:6379'

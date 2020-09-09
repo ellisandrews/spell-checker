@@ -10,6 +10,8 @@ def populate(filepath: str, key: str, strict_redis: StrictRedis) -> None:
     
     Note: If the file of words to add is large, probably want to refactor to read/load in batches.
     """
+    print(f"Populating redis from {filepath} under key: '{key}'")
+    
     # Read the file contents
     with open(filepath, 'r') as f:
         lines = f.readlines()
@@ -19,6 +21,8 @@ def populate(filepath: str, key: str, strict_redis: StrictRedis) -> None:
 
     # Add the words to the redis set under the specified key
     strict_redis.sadd(key, *lines)
+
+    print(f"Finished. Added {len(lines)} items.")
 
 
 if __name__ == '__main__':

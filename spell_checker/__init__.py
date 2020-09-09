@@ -11,11 +11,8 @@ def create_app():
     # Create the application instance
     app = Flask(__name__)
 
-    # Load the correct config
-    if app.env == 'development':
-        app.config.from_object('config.DevelopmentConfig')
-    elif app.env == 'production':
-        app.config.from_object('config.ProductionConfig')
+    # Load extra config variables
+    app.config.from_object('config.Config')
 
     # Associate redis
     redis_client.init_app(app)

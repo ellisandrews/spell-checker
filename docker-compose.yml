@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  api:
+    build: .
+    command: "flask run"
+    ports:
+      - "31337:5000"
+    volumes:
+      - .:/spell-checker
+  
+  redis_db:
+    image: "redis:alpine"
+
+  redis_seed:
+    build: .
+    command: "python scripts/populate_redis.py --host redis_db"
+    depends_on:
+      - redis_db
