@@ -29,8 +29,8 @@ def check_word(query):
     # Search the set of dictionary words for possible matches using the regex pattern
     matches = [w for w in dict_words if pattern.fullmatch(w)]
 
-    # If there are any dictionary word matches, consider the query "found" but incorrectly spelled. 
-    # Otherwise, 404 not found.
+    # If there are any dictionary word matches, consider the query "found" but incorrectly spelled and/or formatted. 
+    # Otherwise, consider the query "not found" and 404.
     if matches:
         return { 'correct': False, 'suggestions': sorted(matches) }, 200
     else:
