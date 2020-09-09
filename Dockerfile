@@ -1,4 +1,4 @@
-# Set base image (host OS)
+# Set base image
 FROM python:3.8
 
 # Set the working directory in the container
@@ -10,9 +10,5 @@ COPY . .
 # Install the dependencies
 RUN pip install -r requirements.txt
 
-# Set flask specific environment variables
-ENV FLASK_APP spell_checker
-ENV FLASK_RUN_HOST 0.0.0.0
-
-# Expose the port where the app runs
+# Expose the port where the app runs in the container
 EXPOSE 5000

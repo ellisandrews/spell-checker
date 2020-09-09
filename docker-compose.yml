@@ -5,6 +5,9 @@ services:
   api:
     build: .
     command: "flask run"
+    environment:
+      - FLASK_APP=spell_checker
+      - FLASK_RUN_HOST=0.0.0.0
     ports:
       - "31337:5000"
     volumes:
