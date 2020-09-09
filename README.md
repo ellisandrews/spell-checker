@@ -21,9 +21,9 @@ The general spell-checking logic as follows:
 1. Check for a valid match right away.
     - "Valid" means exactly matches the spelling of a word in the dictionary *and* is of an accepted format (read: capitalization). 
     - No need to proceed with finding suggestions if the user has provided a valid query.
-    - Return a 200 response with a body noting that the word is correct.
+    - If valid, return a 200 response with a body noting that the word is correct.
 
-2. If no valid match off the bat, build a regular expression (regex) to search the dictionary for possible spelling suggestions per allowable mistakes (see [specifications](exercise/spellchecker.md)).
+2. If no valid match found off the bat, build a regular expression (regex) to search the dictionary for possible spelling suggestions per allowable mistakes (see [specifications](exercise/spellchecker.md)).
     - If there is at least one word in the dictionary that matches the regex, the query word is considered "found". Return a 200 response with a body noting that the word is incorrect but suggestions were found.
     - If no dictionary words match the regex, the query word is considered "not found" and a 404 response is returned.
 
@@ -86,12 +86,12 @@ Then, from the top-level directory run:
 $ docker-compose up -d --build
 ```
 
-This spins up 3 services in docker containers:
+This builds the project docker image and then spins up 3 services in networked docker containers:
 
 1. The Flask JSON API
 2. The Redis instance
 3. A Python script to seed the redis instance with the dictionary of acceptable words (see: [dictionary.txt](/exercise/dictionary.txt)). 
 
-The data seeding script will finish quickly and exit. The other two services will be running in networked docker containers.
+The data seeding script will finish quickly and exit. The other two services will continue running in respective docker containers.
 
 The API will be accessible at: [http://localhost:31337/](http://localhost:31337/)
